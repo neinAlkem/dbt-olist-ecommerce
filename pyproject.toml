@@ -4,4 +4,8 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "boto3>=1.43.31",
+    "dbt-core>=1.11.11",
+    "dbt-databricks>=1.12.1",
+]
