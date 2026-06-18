@@ -467,6 +467,8 @@ dependencies = [
     { name = "cryptography" },
     { name = "dbt-core" },
     { name = "dbt-databricks" },
+    { name = "dotenv" },
+    { name = "kagglehub" },
 ]
 
 [package.metadata]
@@ -475,6 +477,8 @@ requires-dist = [
     { name = "cryptography", specifier = ">=49.0.0" },
     { name = "dbt-core", specifier = ">=1.11.11" },
     { name = "dbt-databricks", specifier = ">=1.12.1" },
+    { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "kagglehub", specifier = ">=1.0.2" },
 ]
 
 [[package]]
@@ -534,6 +538,17 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/89/50/767448e792d41bfb6094ee317a355c1cb221dca24b2e178e2203bbea2a77/deepdiff-8.6.2.tar.gz", hash = "sha256:186dcbd181e4d76cef11ab05f802d0056c5d6083c5a6748c1473e9d7481e183e", size = 634860 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2b/5f/c52bd1255db763d0cdcb7084d2e90c42119cb229302c56bdf1d0aa78abd2/deepdiff-8.6.2-py3-none-any.whl", hash = "sha256:4d22034a866c3928303a9332c279362f714192d9305bac17c498720d095fd1b4", size = 91979 },
+]
+
+[[package]]
+name = "dotenv"
+version = "0.9.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dotenv" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b2/b7/545d2c10c1fc15e48653c91efde329a790f2eecfbbf2bd16003b5db2bab0/dotenv-0.9.9-py2.py3-none-any.whl", hash = "sha256:29cf74a087b31dafdb5a446b6d7e11cbce8ed2741540e2339c69fbef92c94ce9", size = 1892 },
 ]
 
 [[package]]
@@ -676,6 +691,35 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/19/74/a633ee74eb36c44aa6d1095e7cc5569bebf04342ee146178e2d36600708b/jsonschema_specifications-2025.9.1.tar.gz", hash = "sha256:b540987f239e745613c7a9176f3edb72b832a4ac465cf02712288397832b5e8d", size = 32855 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/41/45/1a4ed80516f02155c51f51e8cedb3c1902296743db0bbc66608a0db2814f/jsonschema_specifications-2025.9.1-py3-none-any.whl", hash = "sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe", size = 18437 },
+]
+
+[[package]]
+name = "kagglehub"
+version = "1.0.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "kagglesdk" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b5/b9/e1bdafdcdb98e8e5354b30959ed48f4a08ca2c2dc72c968c5b38c4baa1b5/kagglehub-1.0.2.tar.gz", hash = "sha256:08abae0c1e249904003ce6f23c189166e3032220478426a552c77c2edb08b93a", size = 117457 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/1a/6b1293d0b091905e367f86771a7122e5f7f2729ab9f0f36a1617f7ad6c05/kagglehub-1.0.2-py3-none-any.whl", hash = "sha256:ffad2d79cfda9b06848e98cb0a4a48e286285cfba4aeadadc0b8dbd9bcadd372", size = 70645 },
+]
+
+[[package]]
+name = "kagglesdk"
+version = "0.1.30"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "protobuf" },
+    { name = "requests" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/88/3a/522542dbf928ef18144caccb0dfea1da50bc3d1b5309511410d36b316ab9/kagglesdk-0.1.30.tar.gz", hash = "sha256:47c6643066d965b7898e960fddcde07e151bea1ae1c1c381e25a5a041edf881d", size = 181398 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/60/85/eedcc1c5f3d198d64dcc6f68c30739abb28c180b889099d4e47bb11581ac/kagglesdk-0.1.30-py3-none-any.whl", hash = "sha256:dbd063e1805a5ef947a8c0a6e43b232eb01697f08baf3310bc3dde6dfe5a0193", size = 231016 },
 ]
 
 [[package]]
@@ -1260,6 +1304,15 @@ wheels = [
 ]
 
 [[package]]
+name = "python-dotenv"
+version = "1.2.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/ed/0301aeeac3e5353ef3d94b6ec08bbcabd04a72018415dcb29e588514bba8/python_dotenv-1.2.2.tar.gz", hash = "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3", size = 50135 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0b/d7/1959b9648791274998a9c3526f6d0ec8fd2233e4d4acce81bbae76b44b2a/python_dotenv-1.2.2-py3-none-any.whl", hash = "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a", size = 22101 },
+]
+
+[[package]]
 name = "python-slugify"
 version = "8.0.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1562,6 +1615,18 @@ name = "thrift"
 version = "0.22.0"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/b2/c2/db648cc10dd7d15560f2eafd92a27cd280811924696e0b4a87175fb28c94/thrift-0.22.0.tar.gz", hash = "sha256:42e8276afbd5f54fe1d364858b6877bc5e5a4a5ed69f6a005b94ca4918fe1466", size = 62303 }
+
+[[package]]
+name = "tqdm"
+version = "4.68.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/87/d7/0535a28b1f5f24f6612fb3ff1e89fb1a8d160fee0f976e0aa6803862134b/tqdm-4.68.3.tar.gz", hash = "sha256:00dfa48452b6b6cfae3dd9885636c23d3422d1ec97c66d96818cbd5e0821d482", size = 170596 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/8e/bb97bb0c71802080bfc8952937d174e49cfc50de5c951dd47b2496f0dcdb/tqdm-4.68.3-py3-none-any.whl", hash = "sha256:39832cc2def2789a6f29df83f172db7416cea70052c0907a57801c5f2fdccb03", size = 78337 },
+]
 
 [[package]]
 name = "typing-extensions"
