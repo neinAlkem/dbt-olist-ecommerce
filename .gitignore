@@ -13,3 +13,7 @@ logs/
 # Environment variables
 .env
 .env.*
+
+# Data
+pipelines/include/data/
+pipelines/include/src/.claude/
