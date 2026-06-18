@@ -9,4 +9,6 @@ dependencies = [
     "cryptography>=49.0.0",
     "dbt-core>=1.11.11",
     "dbt-databricks>=1.12.1",
+    "dotenv>=0.9.9",
+    "kagglehub>=1.0.2",
 ]
