@@ -77,11 +77,12 @@ x-airflow-common:
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
   volumes:
-    - ./pipeline/dags:/opt/airflow/dags
-    - ./pipeline/logs:/opt/airflow/logs
-    - ./pipeline/config:/opt/airflow/config
-    - ./pipeline/plugins:/opt/airflow/plugins
-    - ./olist_analytics:/opt/airflow/olist_analytics
+    - ./pipelines/dags:/opt/airflow/dags
+    - ./pipelines/logs:/opt/airflow/logs
+    - ./pipelines/config:/opt/airflow/config
+    - ./pipelines/plugins:/opt/airflow/plugins
+    - ./pipelines/include:/opt/airflow/inlcude
+    - ./data:/opt/airflow/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
