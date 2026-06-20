@@ -11,4 +11,8 @@ dependencies = [
     "dbt-databricks>=1.12.1",
     "dotenv>=0.9.9",
     "kagglehub>=1.0.2",
+    "pytest>=9.1.1",
 ]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
