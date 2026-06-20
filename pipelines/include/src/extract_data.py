@@ -10,7 +10,7 @@ dotenv.load_dotenv()
 KAGGLE_API_TOKEN = os.getenv("KAGGLE_API_TOKEN")
 DATASET_PATH = os.getenv("KAGGLE_DATASET_NAME")
 
-def download_kaggle_dataset(dataset:str, output_dir:str):
+def download_kaggle_dataset(dataset:str, output_dir:str) -> None:
     """
     Download a dataset from Kaggle using the Kaggle API.
 
