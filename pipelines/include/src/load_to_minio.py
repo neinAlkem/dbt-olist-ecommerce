@@ -69,8 +69,11 @@ def upload_local_file(filelist: list[str]) -> None:
                 file,
                 os.path.join(BASE_DIR, 'data', file),
                 'text/csv'
-            )
+            )    
             logger.info('Successfuly loading {} to bucket.'.format(file))
+            
+            os.remove(os.path.join(BASE_DIR, 'data', file))
+            logger.info('Successfuly removing {} from local.'.format(file))
             
     except S3Error as e:
         logger.error('Loading data error: {}'.format(e))
