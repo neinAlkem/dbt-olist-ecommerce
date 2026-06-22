@@ -69,4 +69,4 @@ def load_source_to_bronze() -> None :
        
         
 if __name__ == '__main__':
-    create_bronze_layer()
+    load_source_to_bronze()
