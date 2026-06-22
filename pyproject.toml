@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "boto3>=1.43.31",
     "cryptography>=49.0.0",
+    "databricks-connect==18.2.0",
     "dbt-core>=1.11.11",
     "dbt-databricks>=1.12.1",
     "dotenv>=0.9.9",
