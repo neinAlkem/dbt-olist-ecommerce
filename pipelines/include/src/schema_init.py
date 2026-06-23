@@ -54,5 +54,5 @@ def init_warehouse_schema(schema_list: list[str]) -> None :
        
         
 if __name__ == '__main__':
-    schemas = ['staging' , 'warehouse', 'marts']
+    schemas = ['raw', 'staging' , 'warehouse', 'marts']
     init_warehouse_schema(schemas)
