@@ -1,7 +1,6 @@
 from databricks.connect import DatabricksSession
 import os
 from dotenv import load_dotenv
-from minio import Minio
 import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
