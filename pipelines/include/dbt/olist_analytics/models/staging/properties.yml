@@ -1,0 +1,56 @@
+version: 2
+
+models:
+    -   name: staging_customer
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        description: 'Staging layer for customer data, contain raw data from the source layer.'
+        columns:
+            -   name: customer_id
+                description: 'key to the orders dataset. Each order has a unique customer_id.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+            -   name: customer_unique_id
+                description: 'Customer unique identifier.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   not_null: 
+                            config:
+                                severity: warn
+            -   name: customer_zip_code_prefix
+                description: 'First five digits of customer zip code.'
+                data_tests:
+                    -   generic_value_len:
+                            arguments:
+                                length: 5
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+            -   name: customer_city
+                description: 'Customer city name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            -   name: customer_state
+                description: 'Customer state.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 2 
+                            config:
+                                severity: warn
