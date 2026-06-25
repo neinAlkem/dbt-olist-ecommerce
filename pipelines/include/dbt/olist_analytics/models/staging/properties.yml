@@ -5,9 +5,10 @@ models:
         config:
             materialized: table
         schema: staging
-        version: 1.0.0
+        version: 1.0.1
         description: 'Staging layer for customer data, contain raw data from the source layer.'
         columns:
+
             -   name: customer_id
                 description: 'key to the orders dataset. Each order has a unique customer_id.'
                 data_tests:
@@ -17,6 +18,7 @@ models:
                     -   not_null:
                             config:
                                 severity: warn
+
             -   name: customer_unique_id
                 description: 'Customer unique identifier.'
                 data_tests:
@@ -26,6 +28,7 @@ models:
                     -   not_null: 
                             config:
                                 severity: warn
+
             -   name: customer_zip_code_prefix
                 description: 'First five digits of customer zip code.'
                 data_tests:
@@ -37,12 +40,20 @@ models:
                     -   not_null:
                             config:
                                 severity: warn
+
             -   name: customer_city
                 description: 'Customer city name.'
                 data_tests:
                     -   not_null:
                             config:
                                 severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_city
+                            config:
+                                severity: warn
+
             -   name: customer_state
                 description: 'Customer state.'
                 data_tests:
@@ -52,5 +63,63 @@ models:
                     -   generic_value_len:
                             arguments:
                                 length: 2 
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_state
+                            config:
+                                severity: warn
+
+
+    -   name: staging_location
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        description: 'Staging layer for location data, contain raw data from the source layer.'
+        columns:
+
+            -   name: geolocation_zip_code_prefix
+                description: 'First five digits of zip code.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 5
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_lat
+                description: 'Latitude of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_lng
+                description: 'Longitude of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_city
+                description: 'City name of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_state
+                description: 'State of the geolocation.'
+                data_tests:
+                    -   not_null:
                             config:
                                 severity: warn
