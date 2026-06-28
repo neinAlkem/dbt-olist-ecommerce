@@ -123,3 +123,75 @@ models:
                     -   not_null:
                             config:
                                 severity: warn
+
+    -   name: staging_order_items
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        description: 'Staging layer for order items data, contain raw data from the source layer.'
+        columns:
+
+            -   name: order_id
+                description: 'Unique identifier of the order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_item_id
+                description: 'Sequential number identifying number of items included in the same order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+            
+            -   name: product_id
+                description: 'Product identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                #     -   relationships:
+                #           arguments:
+                #                to: ref('staging_products')
+                #                field: product_id
+                #            config:
+                #                severity: warn 
+            
+            -   name: seller_id
+                description: 'Seller identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn 
+                #     -   relationships:
+                #            arguments:
+                #                to: ref('staging_sellers')
+                #                field: seller_id
+                #            config:
+                #                severity 
+            
+            -   name: shipping_limit_date
+                description: 'Shipping limit date for the item.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            
+            -   name: price
+                description: 'Item price.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: freight_value
+                description: 'Item freight value.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
