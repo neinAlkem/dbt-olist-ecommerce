@@ -1,0 +1,608 @@
+version: 2
+
+models:
+    -   name: staging_customer
+        description: 'Staging layer for customer data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.1
+        columns:
+
+            -   name: customer_id
+                description: 'key to the orders dataset. Each order has a unique customer_id.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: customer_unique_id
+                description: 'Customer unique identifier.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   not_null: 
+                            config:
+                                severity: warn
+
+            -   name: customer_zip_code_prefix
+                description: 'First five digits of customer zip code.'
+                data_tests:
+                    -   generic_value_len:
+                            arguments:
+                                length: 5
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: customer_city
+                description: 'Customer city name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_city
+                            config:
+                                severity: warn
+
+            -   name: customer_state
+                description: 'Customer state.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 2 
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_state
+                            config:
+                                severity: warn
+
+
+    -   name: staging_location
+        description: 'Staging layer for location data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: geolocation_zip_code_prefix
+                description: 'First five digits of zip code.'
+                data_tests:
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 5
+                            config:
+                                severity: warn
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_lat
+                description: 'Latitude of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_lng
+                description: 'Longitude of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_city
+                description: 'City name of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: geolocation_state
+                description: 'State of the geolocation.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+    -   name: staging_order_items
+        description: 'Staging layer for order items data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: order_id
+                description: 'Unique identifier of the order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_orders')
+                                field: order_id
+                            config:
+                                severity: warn 
+            
+
+            -   name: order_item_id
+                description: 'Sequential number identifying number of items included in the same order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+            
+            -   name: product_id
+                description: 'Product identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_products')
+                                field: product_id
+                            config:
+                                severity: warn 
+            
+            -   name: seller_id
+                description: 'Seller identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn 
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_sellers')
+                                field: seller_id
+                            config:
+                                severity: warn
+            
+            -   name: shipping_limit_date
+                description: 'Shipping limit date for the item.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            
+            -   name: price
+                description: 'Item price.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: freight_value
+                description: 'Item freight value.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+
+    -   name: staging_order_payments
+        description: 'Staging layer for orders data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: order_id
+                description: 'Unique identifier of an order.'  
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_orders')
+                                field: order_id
+                            config:
+                                severity: warn
+
+            -   name: payment_sequential
+                description: 'Sequential number of payment.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: payment_type
+                description: 'Payment type.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   accepted_values:
+                            arguments:
+                                values: ['credit_card', 'boleto', 'debit_card', 'voucher']
+                            config:
+                                severity: warn
+
+            -   name: payment_installments
+                description: 'Number of installments of the payment.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: payment_value
+                description: 'Value of the payment.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+
+    -   name: staging_order_reviews
+        description: 'Staging layer for order reviews data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+        
+            -   name: review_id
+                description: 'Unique review identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_id
+                description: 'Unique identifier of an order.'  
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_orders')
+                                field: order_id
+                            config:
+                                severity: warn   
+            
+            -   name: review_score
+                description: 'Review score.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+            
+            -   name: review_comment_title
+                description: 'Review comment title.'
+
+            -   name: review_comment_message
+                description: 'Review comment message.'
+
+    -   name: staging_orders 
+        description: 'Staging layer for orders data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: order_id
+                description: 'unique identifier of the order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: 'customer_id'
+                description: 'key to the customers dataset. Each order has a unique customer_id.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_customer')
+                                field: customer_id
+                            config:
+                                severity: warn
+
+            -   name: order_status
+                description: 'Status of the order.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   accepted_values:
+                            arguments:
+                                values: ['invoiced', 'shipped', 'canceled', 'processing', 'unavailable', 'created', 'approved', 'delivered']
+                            config:
+                                severity: warn
+            
+            -   name: order_purchase_timestamp
+                description: 'Timestamp of the order purchase.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_approved_at
+                description: 'Timestamp of the order approval.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_delivered_carrier_date
+                description: 'Timestamp of the order delivery to the carrier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_delivered_customer_date
+                description: 'Timestamp of the order delivery to the customer.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            
+            -   name: order_estimated_delivery_date
+                description: 'Estimated timestamp of the order delivery.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+    
+
+    -   name: staging_products
+        description: 'Staging layer for products data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: product_id
+                description: 'Product identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: product_category_name
+                description: 'Product category name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_product_category_name_translation')
+                                field: product_category_name
+                            config:
+                                severity: warn
+            
+            -   name: product_name_lenght
+                description: 'Product name length.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: product_description_lenght
+                description: 'Product description length.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: product_photos_qty
+                description: 'Number of product photos.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn      
+                        
+            -   name: product_weight_g
+                description: 'Product weight in grams.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: product_length_cm
+                description: 'Product length in centimeters.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: product_height_cm
+                description: 'Product height in centimeters.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: product_width_cm
+                description: 'Product width in centimeters.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+
+    -   name: staging_sellers
+        description: 'Staging layer for sellers data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: seller_id
+                description: 'Seller identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+            
+            -   name: seller_zip_code_prefix
+                description: 'First five digits of seller zip code.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 5
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_zip_code_prefix
+                            config:
+                                severity: warn
+            
+            -   name: seller_city
+                description: 'Seller city name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_city
+                            config:
+                                severity: warn
+            
+            -   name: seller_state
+                description: 'Seller state.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_value_len:
+                            arguments:
+                                length: 2
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_location')
+                                field: geolocation_state
+                            config:
+                                severity: warn
+
+
+    -   name: staging_category_name_translation
+        description: 'Staging layer for product category name translation data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: product_category_name
+                description: 'Product category name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_products')
+                                field: product_category_name
+                            config:
+                                severity: warn
+            
+
+            -   name: product_category_name_english
+                description: 'Product category name in English.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+
+
+
+
+
+
+                    
+
+
+    
