@@ -138,6 +138,13 @@ models:
                     -   not_null:
                             config:
                                 severity: warn
+                #     -   relationships:
+                #           arguments:
+                #                to: ref('staging_orders')
+                #                field: product_id
+                #            config:
+                #                severity: warn 
+            
 
             -   name: order_item_id
                 description: 'Sequential number identifying number of items included in the same order.'
@@ -195,3 +202,113 @@ models:
                     -   not_null:
                             config:
                                 severity: warn
+
+
+    -   name: staging_order_payments
+        description: 'Staging layer for orders data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+
+            -   name: order_id
+                description: 'Unique identifier of an order.'  
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+        #            -   relationships:
+        #                    arguments:
+        #                        to: ref('staging_orders')
+        #                        field: order_id
+        #                    config:
+        #                        severity: warn
+
+            -   name: payment_sequential
+                description: 'Sequential number of payment.'
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: payment_type
+                description: 'Payment type.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   accepted_values:
+                            arguments:
+                                values: ['credit_card', 'boleto', 'debit_card', 'voucher']
+                            config:
+                                severity: warn
+
+            -   name: payment_installments
+                description: 'Number of installments of the payment.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+            -   name: payment_value
+                description: 'Value of the payment.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+
+
+    -   name: staging_order_reviews
+        description: 'Staging layer for order reviews data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.0
+        columns:
+        
+            -   name: review_id
+                description: 'Unique review identifier.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: order_id
+                description: 'Unique identifier of an order.'  
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            #       -   relationships:
+            #               arguments:
+            #                   to: ref('staging_orders')
+            #                   field: order_id
+            #               config:
+            #                   severity: warn   
+            
+            -   name: review_score
+                description: 'Review score.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: warn
+            
+            -   name: review_comment_title
+                description: 'Review comment title.'
+
+            -   name: review_comment_message
+                description: 'Review comment message.'
+                
