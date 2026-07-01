@@ -6,12 +6,16 @@ models :
         description: 'Dimension layer for custom date range'
         config:
             materialized: table
+            enforced: true
         schema: warehouse
         version: 1.0.0
         columns:
 
-                -   name: date_id
+                -   name: date_key
                     description: 'Date identifier.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
                     data_tests:
                         -   not_null:
                                 config:
@@ -22,6 +26,7 @@ models :
 
                 -   name: full_date
                     description: 'Full date.'
+                    date_type: date
                     data_tests:
                         -   not_null:
                                 config:
@@ -32,6 +37,7 @@ models :
 
                 -   name: day_of_week
                     description: 'Day of the week.'
+                    date_type: integer
                     data_tests:
                         -   not_null:
                                 config:
@@ -39,6 +45,7 @@ models :
 
                 -   name: day_name
                     description: 'Day name.'
+                    date_type: string
                     data_tests:
                         -   not_null:
                                 config:
@@ -46,6 +53,7 @@ models :
 
                 -   name: day_of_month
                     description: 'Day of the month.'
+                    date_type: integer
                     data_tests:
                         -   not_null:
                                 config:
@@ -53,6 +61,7 @@ models :
 
                 -   name: week_of_year
                     description: 'Week of the year.'
+                    date_type: integer
                     data_tests:
                         -   not_null:
                                 config:
@@ -60,6 +69,7 @@ models :
 
                 -   name: month_of_year
                     description: 'Month of the year.'
+                    date_type: integer
                     data_tests:
                         -   not_null:
                                 config:
@@ -67,6 +77,7 @@ models :
 
                 -   name: month_name
                     description: 'Month name.'
+                    date_type: string
                     data_tests:
                         -   not_null:
                                 config:
@@ -74,6 +85,7 @@ models :
 
                 -   name: quarter_of_year
                     description: 'Quarter of the year.'
+                    date_type: integer
                     data_tests:
                         -   not_null:
                                 config:
@@ -81,6 +93,88 @@ models :
 
                 -   name: year
                     description: 'Year.'
+                    date_type: integer
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: is_weekend
+                    description: 'Indicates if the date is a weekend.'
+                    date_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+    
+    -   name: dim_customer
+        description: 'Dimension layer for customer data'
+        config:
+            materialized: incremental
+            unique_key: customer_key
+            on_schema_change: fail
+            incremental_strategy: merge
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: customer_key
+                    description: 'Customer identifier.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: customer_unique_id
+                    description: 'Customer identifier.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: customer_zip_code_prefix
+                    description: 'Zip code prefix of the customer.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: customer_city
+                    description: 'City of the customer.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: customer_state
+                    description: 'State of the customer.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
                     data_tests:
                         -   not_null:
                                 config:
