@@ -32,7 +32,7 @@ WITH
     )
 
 SELECT 
-    md5(cast(coalesce(cast(full_date AS STRING), '') as STRING)) AS date_id,
+    md5(cast(coalesce(cast(full_date AS STRING), '') as STRING)) AS date_key,
     *,
     CURRENT_TIMESTAMP() AS load_timestamp
 FROM
