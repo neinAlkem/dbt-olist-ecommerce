@@ -37,6 +37,12 @@ models :
                                 config:
                                     severity: error
 
+                -   name: day_name
+                    description: 'Day name.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
 
                 -   name: day_of_month
                     description: 'Day of the month.'
