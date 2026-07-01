@@ -1,0 +1,81 @@
+version: 2
+
+models :
+
+    -   name: dim_date
+        description: 'Dimension layer for custom date range'
+        config:
+            materialized: table
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: date_id
+                    description: 'Date identifier.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: full_date
+                    description: 'Full date.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: day_of_week
+                    description: 'Day of the week.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+
+                -   name: day_of_month
+                    description: 'Day of the month.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: week_of_year
+                    description: 'Week of the year.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: month_of_year
+                    description: 'Month of the year.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: month_name
+                    description: 'Month name.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: quarter_of_year
+                    description: 'Quarter of the year.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: year
+                    description: 'Year.'
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
