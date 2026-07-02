@@ -27,3 +27,14 @@ FROM
     {{ ref('dim_customer') }}
 WHERE
     customer_key = '508cae50c5c1e72079d266a513bca9ae';
+
+SELECT
+    MD5(CAST(COALESCE(CAST(payment_type AS STRING), '') AS STRING)) AS payment_type_key,
+    {},
+    DISTINCT(payment_type) AS payment_type_name,
+    CASE
+        WHEN payment_type = 'credit_card' THEN True
+        ELSE False
+    END AS is_eligable_installment
+FROM
+    {{ ref('staging_order_payments') }};
