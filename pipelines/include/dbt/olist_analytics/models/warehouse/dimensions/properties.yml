@@ -179,3 +179,60 @@ models :
                         -   not_null:
                                 config:
                                     severity: error
+    
+    -   name: dim_payment_type
+        description: 'Dimension layer for payment type data'
+        config:
+            materialized: table
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: payment_type_key
+                    description: 'Payment type identifier.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: payment_type_code
+                    description: 'Code of the payment type.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: payment_type_name
+                    description: 'Name of the payment type.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: is_eligable_installment
+                    description: 'Indicates if the payment type is eligible for installment.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
