@@ -1,0 +1,5 @@
+payment_type_code,payment_type_name,is_eligable_installment
+001,Credit Card,True
+002,Debit Card,False
+003,Boleto,False
+004,Voucher,False
