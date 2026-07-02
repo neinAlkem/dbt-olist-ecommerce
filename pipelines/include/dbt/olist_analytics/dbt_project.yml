@@ -37,4 +37,12 @@ models:
       +schema: staging
 
     warehouse:
+      +materialized: table
       +schema: warehouse
+
+seeds:
+  olist_analytics:
+    +schema: staging
+    +post-hook: 
+      - 'ALTER TABLE {{ this }} ADD COLUMN load_timestamp TIMESTAMP'
+      - 'UPDATE {{ this }} SET load_timestamp = CURRENT_TIMESTAMP()'
