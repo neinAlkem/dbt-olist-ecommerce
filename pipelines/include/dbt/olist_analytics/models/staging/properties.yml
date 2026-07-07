@@ -498,7 +498,7 @@ models:
         config:
             materialized: table
         schema: staging
-        version: 1.0.0
+        version: 1.0.1
         columns:
 
             -   name: seller_id
@@ -557,6 +557,16 @@ models:
                             arguments:
                                 to: ref('staging_location')
                                 field: geolocation_state
+                            config:
+                                severity: warn
+
+            -   name: scd_id
+                description: 'Hash value of the seller data, used for SCD (Slowly Changing Dimension) purposes.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
                             config:
                                 severity: warn
 
