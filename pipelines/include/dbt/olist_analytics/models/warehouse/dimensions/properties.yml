@@ -223,7 +223,7 @@ models :
 
                 -   name: is_eligable_installment
                     description: 'Indicates if the payment type is eligible for installment.'
-                    data_type: string
+                    data_type: boolean
                     data_tests:
                         -   not_null:
                                 config:
@@ -232,6 +232,87 @@ models :
                 -   name: load_timestamp
                     description: 'Timestamp when the record was loaded.'
                     date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+
+    -   name: dim_seller
+        description: 'Dimension layer for seller data'
+        config:
+            materialized: incremental
+            unique_key: scd_id
+            on_schema_change: fail
+            incremental_strategy: delete+insert
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: seller_key
+                    description: 'Seller identifier.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: seller_zip_code_prefix
+                    description: 'Zip code prefix of the seller.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: seller_city
+                    description: 'City of the seller.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: seller_state
+                    description: 'State of the seller.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: scd_id
+                    description: 'Hash value of the seller data, used for SCD (Slowly Changing Dimension) purposes.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: expiry_timestamp
+                    description: 'Timestamp when the record will expire.'
+                    date_type: timestamp
+                
+                -   name: is_active
+                    description: 'Indicates if the record is active.'
+                    data_type: boolean
                     data_tests:
                         -   not_null:
                                 config:
