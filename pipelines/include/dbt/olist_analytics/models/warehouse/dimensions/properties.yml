@@ -317,3 +317,73 @@ models :
                         -   not_null:
                                 config:
                                     severity: error
+
+    -   name: dim_product
+        description: 'Dimension layer for product data'
+        config:
+            materialized: incremental
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: product_key
+                    description: 'Product identifier.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: product_category_name_english
+                    description: 'Category name of the product.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: product_volume_cm3
+                    description: 'Volume of the product in cubic centimeters.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: product_length_cm
+                    description: 'Length of the product in centimeters.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: product_height_cm
+                    description: 'Height of the product in centimeters.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: product_width_cm
+                    description: 'Width of the product in centimeters.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
