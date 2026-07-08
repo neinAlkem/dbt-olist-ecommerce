@@ -1,0 +1,9 @@
+order_status_code,order_status_name,status_category,is_final_status,status_sequence
+1,created,Initial,false,1
+2,approved,Processing,false,2
+3,invoiced,Processing,false,3
+4,processing ,Processing,false,4
+5,shipped,Fulfillment,false,5
+6,delivered,Completed,true,6
+7,canceled,Cancelled,true,99
+8,unavailable,Exception,true,98
