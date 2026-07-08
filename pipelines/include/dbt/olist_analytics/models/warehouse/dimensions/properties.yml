@@ -387,3 +387,93 @@ models :
                         -   not_null:
                                 config:
                                     severity: error
+
+    
+    -   name: dim_order_status
+        description: 'Dimension layer for order status data'
+        config:
+            materialized: incremental
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+            -   name: order_status_key
+                description: 'Order status identifier'
+                data_type: string
+                constraints:
+                    -   type: primary_key
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   unique:
+                            config:
+                                severity: error
+
+            -   name: order_status_code
+                description: 'Code of order status'
+                data_type: string
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   unique:
+                            config:
+                                severity: error
+
+            -   name: order_status_name
+                description: 'Name of status'
+                data_type: string
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   unique:
+                            config:
+                                severity: error
+
+            -   name: status_category
+                description: 'Status step category'
+                data_type: string
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   accepted_values:
+                            values: ['Initial', 'Processing', 'Fulfillment', 'Completec', 'Cancalled', 'Exception']
+                            config:
+                                severity: error
+
+            -   name: is_final_status
+                description: 'Boolean for final status aknowledge'
+                data_type: boolean
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   accepted_values:
+                            values: ['true' , 'false']
+                            config:
+                                severity: error
+            
+            -   name: status_sequence
+                description: 'Sequence of trip to the end user'
+                data_type: int
+                data_test:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   unique:
+                            config:
+                                severity: error 
+                                
+            -   name: load_timestamp
+                description: 'Timestamp when the record was loaded.'
+                date_type: timestamp
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+
+               
