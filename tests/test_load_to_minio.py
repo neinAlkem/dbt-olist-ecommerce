@@ -14,14 +14,18 @@ from pipelines.include.src.load_to_minio import get_files_path, upload_local_fil
 class TestGetFilesPath(unittest.TestCase):
 
     @patch('os.listdir')
-    @patch('pipelines.include.src.load_to_minio.BASE_DIR', new_callable=MagicMock)
-    def test_get_files_path_returns_csv_files(self, mock_base_dir, mock_listdir):
-        
-        mock_base_dir.__truediv__.return_value = '/fake/path/to/data'
+    @patch('pipelines.include.src.load_to_minio.BASE_DIR') # Patch BASE_DIR itself
+    def test_get_files_path_returns_csv_files(self, mock_base_dir_path, mock_listdir):
+        # Simulate BASE_DIR being a Path object and its division operation
+        mock_data_path = MagicMock()
+        mock_data_path.__str__.return_value = '/fake/path/to/data' # What os.listdir will receive
+        mock_base_dir_path.__truediv__.return_value = mock_data_path
+
         mock_listdir.return_value = ['file1.csv', 'file2.txt', 'file3.csv']
 
         result = get_files_path()
 
+        mock_listdir.assert_called_once_with('/fake/path/to/data')
         self.assertEqual(result, ['file1.csv', 'file3.csv'])
 
     @patch('os.listdir')
@@ -37,7 +41,8 @@ class TestUploadLocalFile(unittest.TestCase):
 
     @patch('pipelines.include.src.load_to_minio.Minio')
     @patch('pipelines.include.src.load_to_minio.logger')
-    def test_upload_local_file_creates_bucket_and_uploads_files(self, mock_logger, mock_minio):
+    @patch('os.remove') # Mock os.remove
+    def test_upload_local_file_creates_bucket_and_uploads_files(self, mock_remove, mock_logger, mock_minio):
 
         mock_client = MagicMock()
         mock_minio.return_value = mock_client
@@ -55,11 +60,13 @@ class TestUploadLocalFile(unittest.TestCase):
         mock_logger.info.assert_any_call('Successfuly loading test1.csv to bucket.')
         mock_logger.info.assert_any_call('Uploading test2.csv...')
         mock_logger.info.assert_any_call('Successfuly loading test2.csv to bucket.')
+        mock_remove.call_count == 2 # Verify os.remove was called for each file
 
 
     @patch('pipelines.include.src.load_to_minio.Minio')
     @patch('pipelines.include.src.load_to_minio.logger')
-    def test_upload_local_file_does_not_create_bucket_if_exists(self, mock_logger, mock_minio):
+    @patch('os.remove') # Mock os.remove
+    def test_upload_local_file_does_not_create_bucket_if_exists(self, mock_remove, mock_logger, mock_minio):
 
         mock_client = MagicMock()
         mock_minio.return_value = mock_client
@@ -72,6 +79,7 @@ class TestUploadLocalFile(unittest.TestCase):
         mock_client.bucket_exists.assert_called_once_with(BUCKET_NAME)
         mock_client.make_bucket.assert_not_called()
         mock_client.fput_object.assert_called_once()
+        mock_remove.assert_called_once() # Verify os.remove was called for the file
 
 
 class TestMain(unittest.TestCase):
