@@ -157,6 +157,19 @@ wheels = [
 ]
 
 [[package]]
+name = "anyio"
+version = "4.14.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "idna" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3b/72/5562aabb8dd7181e8e860622a38bea08d17842b99ecd4c91f84ac95251b0/anyio-4.14.1.tar.gz", hash = "sha256:8d648a3544c1a700e3ff78615cd679e4c5c3f149904287e73687b2596963629e", size = 254831 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/7b/90df4a0a816d98d6ea26f559d87836d494a2cf1fcf063be67df50a7bcc30/anyio-4.14.1-py3-none-any.whl", hash = "sha256:4e5533c5b8ff0a24f5d7a176cbe6877129cd183893f66b537f8f227d10527d72", size = 124875 },
+]
+
+[[package]]
 name = "argon2-cffi"
 version = "25.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -666,6 +679,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "aiohttp" },
+    { name = "anyio" },
     { name = "boto3" },
     { name = "cryptography" },
     { name = "databricks-connect" },
@@ -676,12 +690,14 @@ dependencies = [
     { name = "kagglehub" },
     { name = "minio" },
     { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "unidecode" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.14.1" },
+    { name = "anyio", specifier = ">=4.14.1" },
     { name = "boto3", specifier = ">=1.43.31" },
     { name = "cryptography", specifier = ">=49.0.0" },
     { name = "databricks-connect", specifier = "==18.2.0" },
@@ -692,6 +708,7 @@ requires-dist = [
     { name = "kagglehub", specifier = ">=1.0.2" },
     { name = "minio", specifier = ">=7.2.20" },
     { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest-asyncio", specifier = ">=1.4.0" },
     { name = "unidecode", specifier = ">=1.4.0" },
 ]
 
@@ -1979,6 +1996,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e4/47/b9efed96c114afcfa3c9d3fe98a76a1d14c74a9e266d397cf6eb64be5e01/pytest-9.1.1.tar.gz", hash = "sha256:1088fbde8f2b49d95a549a195707afa7a76a3ce9bcadc26b6d71f0ffda5fe313", size = 1636369 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/24/25/1de2678b631f5a49215c6c96fff41ba892b0a34df68d6d80292b1b48aa7f/pytest-9.1.1-py3-none-any.whl", hash = "sha256:37a86b45efb9a47a61a36449063e8e18d0cab3161329fc099eb21783169c4f0c", size = 386536 },
+]
+
+[[package]]
+name = "pytest-asyncio"
+version = "1.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/43/7c/d36d04db312ecf4298932ef77e6e4a9e8ad017906e24e34f0b0c361a2473/pytest_asyncio-1.4.0.tar.gz", hash = "sha256:c6c0d2259945122819f171a32ecea2c349ead889ee28176caaf492143424be42", size = 58514 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/03/e2/08a497ef684b88559c9cc5f4ad53a37e7b99e727094a86d6ea32536d5d3c/pytest_asyncio-1.4.0-py3-none-any.whl", hash = "sha256:933ca923a23075a87fb7070c0ec272a6848489824d887c85c812670932835aa1", size = 16930 },
 ]
 
 [[package]]
