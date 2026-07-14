@@ -606,6 +606,91 @@ models:
                             config:
                                 severity: warn
 
+    -   name: staging_geo_cities
+        description: 'Staging layer for cities details data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.1
+        columns:
+
+            -   name: city_name
+                description: 'City name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: latitude
+                description: 'Latitude of the city.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: longitude
+                description: 'Longitude of the city.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            
+            -   name: load_timestamp
+                description: 'Timestamp of the data load.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+
+    -   name: staging_geo_zipcodes
+        description: 'Staging layer for zipcodes details data, contain raw data from the source layer.'
+        config:
+            materialized: table
+        schema: staging
+        version: 1.0.1
+        columns:
+
+            -   name: zipcodes
+                description: 'Zipcode.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+            
+            -   name: city_name
+                description: 'City name.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   relationships:
+                            arguments:
+                                to: ref('staging_geo_cities')
+                                field: city_name
+                            config:
+                                severity: warn
+
+            -   name: state_name
+                description: 'State.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: load_timestamp
+                description: 'Timestamp of the data load.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+            
 
 
 

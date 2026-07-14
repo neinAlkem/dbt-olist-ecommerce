@@ -8,7 +8,3 @@ SELECT
 FROM
     {{ ref('order_status') }}
 
-{% if is_incremental() %}
-WHERE
-    load_timestamp > (SELECT MAX(load_timestamp) FROM {{ this }})
-{% endif %}

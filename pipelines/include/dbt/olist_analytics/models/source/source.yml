@@ -14,3 +14,5 @@ sources:
             -   name:   olist_products_dataset
             -   name:   olist_sellers_dataset
             -   name:   product_category_name_translation
+            -   name:   zipcodes_geo
+            -   name:   cities_geo
