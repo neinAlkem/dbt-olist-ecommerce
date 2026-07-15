@@ -17,7 +17,6 @@ WHERE
         FROM {{ ref('staging_category_name_translation') }}
     )
     OR    
-        product_category_name_english LIKE '%Unknown%';
-    ;
+        product_category_name_english LIKE '%Unknown%'
 
 
