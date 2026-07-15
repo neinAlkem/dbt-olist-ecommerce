@@ -1,0 +1,180 @@
+version: 2
+
+models:
+
+    -   name: fact_order_items
+        description: 'Fact layer for order items data'
+        config:
+            materialized: incremental
+            unique_key: incremental_hash_key
+            on_schema_change: fail
+            incremental_strategy: merge
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:
+
+                -   name: purchase_date
+                    description: 'Date of the purchase.'
+                    data_type: date
+                    constrains:
+                        -   type: foreign_key
+                            to: ref('dim_date')
+                            to_columns: full_date
+                            warn_uneforced: False
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   generic_not_tommorow:
+                                config:
+                                    severity: error
+                
+                -   name: customer_id
+                    description: 'Customer identifier.'
+                    data_type: string
+                    constrains:
+                        -   type: foreign_key
+                            to: ref('dim_customer')
+                            to_columns: customer_unique_id
+                            warn_uneforced: False
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   relationships:
+                                arguments:
+                                    to: ref('dim_customer')
+                                    field: customer_unique_id
+                                config:
+                                    severity: error
+                    
+                -   name: seller_id
+                    description: 'Seller identifier.'
+                    data_type: string
+                    constrains:
+                        -    type: foreign_key
+                             to: ref('dim_seller')
+                             to_columns: seller_key
+                             warn_uneforced: False
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   relationships:
+                                arguments:
+                                    to: ref('dim_seller')
+                                    field: seller_key
+                                config:
+                                    severity: error 
+
+                -   name: product_id
+                    description: 'Product identifier.'
+                    data_type: string
+                    constaints:   
+                        -   type: foreign_key
+                            to: ref('dim_product')
+                            to_columns: product_key
+                            warn_uneforced: False
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   relationships:
+                                arguments:
+                                    to: ref('dim_product')
+                                    field: product_key
+                                config:
+                                    severity: error
+                
+                -   name: order_id
+                    description: 'Order identifier.'
+                    data_type: string
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                
+                -   name: quantity_counter
+                    description: 'Quantity counter.'
+                    data_type: int
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   generic_non_zero_negative:
+                                config:
+                                    severity: error
+
+                -   name: order_status
+                    description: 'Order status.'
+                    data_type: string
+                    constrains:
+                        -   type: foreign_key
+                            to: ref('dim_order_status')
+                            to_columns: order_status_name
+                            warn_uneforced: False
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   relationships:
+                                arguments:
+                                    to: ref('dim_order_status')
+                                    field: order_status_name
+                                config:
+                                    severity: error
+                
+                -   name: price
+                    description: 'Price.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   generic_non_zero_negative:
+                                config:
+                                    severity: error
+
+                -   name: freight_value
+                    description: 'Freight value.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   generic_non_zero_negative:
+                                config:
+                                    severity: error     
+
+                -   name: total_price
+                    description: 'Total price.'
+                    data_type: float
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   generic_non_zero_negative:
+                                config:
+                                    severity: error
+                
+                -   name: incremental_hash
+                    description: 'Incremental hash key.'
+                    data_type: string
+                    constraints:
+                        -   type: primary_key
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error
+                        -   unique:
+                                config:
+                                    severity: error
+
+                -   name: load_timestamp
+                    description: 'Timestamp when the record was loaded.'
+                    date_type: timestamp
+                    data_tests:
+                        -   not_null:
+                                config:
+                                    severity: error

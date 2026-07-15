@@ -1,6 +1,6 @@
 version: 2
 
-models :
+models:
 
     -   name: dim_date
         description: 'Dimension layer for custom date range'
