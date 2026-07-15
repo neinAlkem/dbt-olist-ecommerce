@@ -11,5 +11,7 @@
     "python.testing.pytestArgs": [
         "tests"
     ],
-    "postman.settings.dotenv-detection-notification-visibility": false
+    "postman.settings.dotenv-detection-notification-visibility": false,
+    "dbt.perspectiveTheme": "Vintage",
+    "dbt.queryLimit": 10000
 }
