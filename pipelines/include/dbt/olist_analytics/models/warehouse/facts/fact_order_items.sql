@@ -30,12 +30,22 @@ WITH lowest_grain AS (
         ON z.order_status = e.order_status_name
 
     {% if is_incremental() %}
-    WHERE f.load_timestamp >= ( SELECT MAX(load_timestamp)FROM {{ this }} )
+    WHERE f.load_timestamp >= ( SELECT MAX(load_timestamp) FROM {{ this }} )
     {% endif %}
 
 )
 
 SELECT
-    *,
+    purchase_date,
+    customer_id,
+    seller_id,
+    product_id,
+    order_id,
+    quantity_counter,
+    order_status,
+    price,
+    freight_value,
+    total_price,
+    incremental_hash,
     DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM lowest_grain;
