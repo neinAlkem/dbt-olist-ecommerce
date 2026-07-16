@@ -7,6 +7,7 @@ SELECT
     TRIM(CAST(order_delivered_carrier_date AS TIMESTAMP)) AS order_delivered_carrier_date,
     TRIM(CAST(order_delivered_customer_date AS TIMESTAMP)) AS order_delivered_customer_date,
     TRIM(CAST(order_estimated_delivery_date AS TIMESTAMP)) AS order_estimated_delivery_date,
+    MD5(COALESCE(CONCAT(order_id,customer_id),'')) AS incremental_hash,
     CURRENT_TIMESTAMP() AS load_timestamp
 FROM
     {{ source('raw', 'olist_orders_dataset') }}

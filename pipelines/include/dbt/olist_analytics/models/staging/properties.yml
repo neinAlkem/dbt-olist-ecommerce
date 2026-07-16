@@ -178,7 +178,7 @@ models:
                     -   relationships:
                             arguments:
                                 to: ref('staging_sellers')
-                                field: seller_id
+                                field: seller_key
                             config:
                                 severity: warn
             
@@ -203,6 +203,22 @@ models:
                             config:
                                 severity: warn
 
+            -   name: incremental_hash
+                description: 'Unique hash for data incremental merge process'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: load_timestamp
+                description: 'Timestamp of the data load.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
 
     -   name: staging_order_payments
         description: 'Staging layer for orders data, contain raw data from the source layer.'
@@ -385,6 +401,23 @@ models:
             
             -   name: order_estimated_delivery_date
                 description: 'Estimated timestamp of the order delivery.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+            -   name: incremental_hash
+                description: 'Unique hash for data incremental merge process'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: load_timestamp
+                description: 'Timestamp of the data load.'
                 data_tests:
                     -   not_null:
                             config:
