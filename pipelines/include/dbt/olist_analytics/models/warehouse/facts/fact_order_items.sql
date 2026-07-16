@@ -1,29 +1,32 @@
 WITH lowest_grain AS (
 
     SELECT
-        a.full_date AS purchase_date,
-        b.customer_unique_id AS customer_id,
-        c.seller_key AS seller_id,
-        d.product_key AS product_id,
-        f.order_id AS order_id,
-        f.order_item_id AS quantity_counter,
-        e.order_status_name AS order_status,
-        ROUND(CAST(f.price AS FLOAT),2) AS price,
-        ROUND(CAST(f.freight_value AS FLOAT),2) AS freight_value,
-        ROUND(CAST(f.price AS FLOAT) + CAST(f.freight_value AS FLOAT),2) AS total_price,
+        COALESCE(a.full_date, NULL) AS purchase_date,
+        COALESCE(b.customer_unique_id, 'Unknown') AS customer_id,
+        COALESCE(c.seller_key, 'Unknown') AS seller_id,
+        COALESCE(d.product_key, 'Unknown') AS product_id,
+        COALESCE(f.order_id, 'Unknown') AS order_id,
+        COALESCE(f.order_item_id, 0) AS quantity_counter,
+        COALESCE(e.order_status_name, 'Unknown') AS order_status,
+        COALESCE(ROUND(CAST(f.price AS FLOAT), 2), 0) AS price,
+        COALESCE(ROUND(CAST(f.freight_value AS FLOAT), 2), 0) AS freight_value,
+        COALESCE(ROUND(CAST(f.price AS FLOAT) + CAST(f.freight_value AS FLOAT), 2),0) AS total_price,
         f.incremental_hash AS incremental_hash
-    FROM {{ ref("dim_date") }} a
-    JOIN {{ ref("staging_orders") }} z
+    FROM 
+        {{ ref('staging_order_items') }} f
+    LEFT JOIN
+        {{ ref('staging_orders') }} z 
+        ON f.order_id = z.order_id
+    LEFT JOIN
+        {{ ref('dim_date') }} a
         ON a.full_date = CAST(z.order_purchase_timestamp AS DATE)
-    JOIN {{ ref("staging_order_items") }} f
-        ON z.order_id = f.order_id
-    JOIN {{ ref("dim_customer") }} b
+    LEFT JOIN {{ ref("dim_customer") }} b
         ON z.customer_id = b.customer_key
-    JOIN {{ ref("dim_seller") }} c
+    LEFT JOIN {{ ref("dim_seller") }} c
         ON f.seller_id = c.seller_key
-    JOIN {{ ref("dim_product") }} d
+    LEFT JOIN {{ ref("dim_product") }} d
         ON f.product_id = d.product_key
-    JOIN {{ ref("dim_order_status") }} e
+    LEFT JOIN {{ ref("dim_order_status") }} e
         ON z.order_status = e.order_status_name
 
     {% if is_incremental() %}

@@ -86,15 +86,20 @@ models:
                                     field: product_key
                                 config:
                                     severity: error
-                
+
                 -   name: order_id
                     description: 'Order identifier.'
                     data_type: string
+                    constrains:
+                        -   type: foreign_key
+                            to: ref('dim_order')
+                            to_columns: order_key
+                            warn_uneforced: False
                     data_tests:
                         -   not_null:
                                 config:
                                     severity: error
-                
+
                 -   name: quantity_counter
                     description: 'Quantity counter.'
                     data_type: int
