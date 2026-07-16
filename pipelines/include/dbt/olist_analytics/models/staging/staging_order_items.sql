@@ -6,6 +6,7 @@ SELECT
     TRIM(CAST(shipping_limit_date AS TIMESTAMP)) AS shipping_limit_date,
     TRIM(CAST(price AS DOUBLE)) AS price,
     TRIM(CAST(freight_value AS DOUBLE)) AS freight_value,
+    MD5(COALESCE(CONCAT(order_id,order_item_id),'')) AS incremental_hash,
     CURRENT_TIMESTAMP() AS load_timestamp
 FROM
     {{ source('raw', 'olist_order_items_dataset') }}
