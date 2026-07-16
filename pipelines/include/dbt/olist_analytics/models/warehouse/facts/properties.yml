@@ -6,7 +6,7 @@ models:
         description: 'Fact layer for order items data'
         config:
             materialized: incremental
-            unique_key: incremental_hash_key
+            unique_key: incremental_hash
             on_schema_change: fail
             incremental_strategy: merge
             enforced: true

@@ -10,7 +10,8 @@ WITH lowest_grain AS (
         e.order_status_name AS order_status,
         ROUND(CAST(f.price AS FLOAT),2) AS price,
         ROUND(CAST(f.freight_value AS FLOAT),2) AS freight_value,
-        ROUND(CAST(f.price AS FLOAT) + CAST(f.freight_value AS FLOAT),2) AS total_price
+        ROUND(CAST(f.price AS FLOAT) + CAST(f.freight_value AS FLOAT),2) AS total_price,
+        f.incremental_hash AS incremental_hash
     FROM {{ ref("dim_date") }} a
     JOIN {{ ref("staging_orders") }} z
         ON a.full_date = CAST(z.order_purchase_timestamp AS DATE)
@@ -26,13 +27,12 @@ WITH lowest_grain AS (
         ON z.order_status = e.order_status_name
 
     {% if is_incremental() %}
-    WHERE a.full_date >= ( SELECT MAX(purchase_date)FROM {{ this }} )
+    WHERE f.load_timestamp >= ( SELECT MAX(load_timestamp)FROM {{ this }} )
     {% endif %}
 
 )
 
 SELECT
     *,
-    MD5(COALESCE(CONCAT(purchase_date,customer_id,seller_id,product_id,order_status,order_id,quantity_counter),'')) AS incremental_hash,
-    CURRENT_TIMESTAMP() AS load_timestamp
+    DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM lowest_grain;
