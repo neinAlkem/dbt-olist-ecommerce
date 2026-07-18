@@ -335,3 +335,125 @@ models:
                     -   not_null:
                             config:
                                 severity: error
+
+
+    -   name: fact_order_payments
+        description: 'Fact layer for order payments data'
+        config:
+            materialized: incremental
+            unique_key: incremental_hash
+            on_schema_change: fail
+            incremental_strategy: merge
+            enforced: true
+        schema: warehouse
+        version: 1.0.0
+        columns:       
+
+            -   name: order_id
+                description: 'Order identifier.'
+                data_type: string
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+
+            -   name: payment_date
+                description: 'Date of the payment.'
+                data_type: date
+                constrains:
+                    -   type: foreign_key
+                        to: ref('dim_date')
+                        to_columns: full_date
+                        warn_uneforced: False
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   generic_not_tommorow:
+                            config:
+                                severity: error
+            
+            -   name: payment_counter
+                description: 'Payment counter.'
+                data_type: int
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: error
+            
+            -   name: payment_type_name
+                description: 'Payment type name.'
+                data_type: string
+                constrains:
+                    -   type: foreign_key
+                        to: ref('dim_payment_type')
+                        to_columns: payment_type_name
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   relationships:
+                            arguments:
+                                to: ref('dim_payment_type')
+                                field: payment_type_name
+                            config:
+                                severity: error
+
+            -   name: payment_value
+                description: 'Payment value.'
+                data_type: float
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: error
+
+            -   name: payment_installments
+                description: 'Payment installments.'
+                data_type: int
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: error
+
+            -   name: installment_value
+                description: 'Installment value.'
+                data_type: float
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   generic_non_zero_negative:
+                            config:
+                                severity: error
+
+            -   name: incremental_hash
+                description: 'Incremental hash key.'
+                data_type: string
+                constraints:
+                    -   type: primary_key
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+                    -   unique:
+                            config:
+                                severity: error
+
+            -   name: load_timestamp
+                description: 'Timestamp when the record was loaded.'
+                date_type: timestamp
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: error
+
+            
