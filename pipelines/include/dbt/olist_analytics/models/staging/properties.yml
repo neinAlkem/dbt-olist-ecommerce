@@ -283,6 +283,24 @@ models:
                             config:
                                 severity: warn
 
+            -   name: incremental_hash
+                description: 'Unique hash for data incremental merge process'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+                    -   unique:
+                            config:
+                                severity: warn
+
+            -   name: load_timestamp
+                description: 'Timestamp of the data load.'
+                data_tests:
+                    -   not_null:
+                            config:
+                                severity: warn
+
+
 
     -   name: staging_order_reviews
         description: 'Staging layer for order reviews data, contain raw data from the source layer.'
