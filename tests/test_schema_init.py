@@ -1,14 +1,14 @@
 import pytest
 import logging
 from unittest.mock import patch, MagicMock
-from include.src.schema_init import init_warehouse_schema
+from dags.warehouse.schema_init import init_warehouse_schema
 
 @pytest.fixture
 def mock_spark():
     """
     Fixture to mock the DatabricksSession builder chain and return the mock Spark session.
     """
-    with patch('include.src.schema_init.DatabricksSession') as mock_session:
+    with patch('dags.warehouse.schema_init.DatabricksSession') as mock_session:
         # Mock the chained builder methods: .builder.host().token().serverless().getOrCreate()
         mock_builder = mock_session.builder
         mock_host = mock_builder.host.return_value
@@ -18,7 +18,7 @@ def mock_spark():
         
         yield mock_spark_instance
 
-@patch('include.src.schema_init.CATALOG', 'test_catalog')
+@patch('dags.warehouse.schema_init.CATALOG', 'test_catalog')
 def test_init_creates_missing_catalog_and_schemas(mock_spark, caplog):
     """
     Test scenario: Neither the catalog nor the schemas exist.
@@ -53,7 +53,7 @@ def test_init_creates_missing_catalog_and_schemas(mock_spark, caplog):
     assert 'Catalog not exists, creating...' in caplog.text
     assert 'Schema not exists, creating staging...' in caplog.text
 
-@patch('include.src.schema_init.CATALOG', 'test_catalog')
+@patch('dags.warehouse.schema_init.CATALOG', 'test_catalog')
 def test_init_skips_creation_if_already_exists(mock_spark, caplog):
     """
     Test scenario: The catalog and schemas already exist.
@@ -87,7 +87,7 @@ def test_init_skips_creation_if_already_exists(mock_spark, caplog):
     assert 'Catalog found.' in caplog.text
     assert 'Schema staging found.' in caplog.text
 
-@patch('include.src.schema_init.CATALOG', 'test_catalog')
+@patch('dags.warehouse.schema_init.CATALOG', 'test_catalog')
 def test_init_handles_exceptions(mock_spark, caplog):
     """
     Test scenario: The Spark session throws an error during execution.

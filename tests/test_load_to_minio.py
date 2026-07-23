@@ -9,12 +9,12 @@ BUCKET_NAME = os.getenv('BUCKET_NAME')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from include.src.load_to_minio import get_files_path, upload_local_file, main
+from dags.minio.load_to_minio import get_files_path, upload_local_file, main
 
 class TestGetFilesPath(unittest.TestCase):
 
     @patch('os.listdir')
-    @patch('include.src.load_to_minio.BASE_DIR') # Patch BASE_DIR itself
+    @patch('dags.warehouse.load_to_minio.BASE_DIR') # Patch BASE_DIR itself
     def test_get_files_path_returns_csv_files(self, mock_base_dir_path, mock_listdir):
         # Simulate BASE_DIR being a Path object and its division operation
         mock_data_path = MagicMock()
@@ -39,8 +39,8 @@ class TestGetFilesPath(unittest.TestCase):
 
 class TestUploadLocalFile(unittest.TestCase):
 
-    @patch('include.src.load_to_minio.Minio')
-    @patch('include.src.load_to_minio.logger')
+    @patch('dags.warehouse.load_to_minio.Minio')
+    @patch('dags.warehouse.load_to_minio.logger')
     @patch('os.remove') # Mock os.remove
     def test_upload_local_file_creates_bucket_and_uploads_files(self, mock_remove, mock_logger, mock_minio):
 
@@ -63,8 +63,8 @@ class TestUploadLocalFile(unittest.TestCase):
         mock_remove.call_count == 2 # Verify os.remove was called for each file
 
 
-    @patch('include.src.load_to_minio.Minio')
-    @patch('include.src.load_to_minio.logger')
+    @patch('dags.warehouse.load_to_minio.Minio')
+    @patch('dags.warehouse.load_to_minio.logger')
     @patch('os.remove') # Mock os.remove
     def test_upload_local_file_does_not_create_bucket_if_exists(self, mock_remove, mock_logger, mock_minio):
 
@@ -84,8 +84,8 @@ class TestUploadLocalFile(unittest.TestCase):
 
 class TestMain(unittest.TestCase):
 
-    @patch('include.src.load_to_minio.get_files_path')
-    @patch('include.src.load_to_minio.upload_local_file')
+    @patch('dags.warehouse.load_to_minio.get_files_path')
+    @patch('dags.warehouse.load_to_minio.upload_local_file')
     def test_main_calls_get_files_path_and_upload_local_file(self, mock_upload, mock_get_files):
        
         mock_get_files.return_value = ['file1.csv', 'file2.csv']
