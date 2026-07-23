@@ -1,7 +1,7 @@
 import os
 import pytest
 from unittest import mock
-from pipelines.include.src.extract_data import download_kaggle_dataset
+from include.src.extract_data import download_kaggle_dataset
 
 def test_download_kaggle_dataset_missing_token():
     """
@@ -9,7 +9,7 @@ def test_download_kaggle_dataset_missing_token():
     """
     
     with mock.patch.dict(os.environ, {}, clear=True):
-        with mock.patch('pipelines.include.src.extract_data.KAGGLE_API_TOKEN', None):
+        with mock.patch('include.src.extract_data.KAGGLE_API_TOKEN', None):
             with pytest.raises(ValueError, match="KAGGLE_API_TOKEN is not set"):
                 download_kaggle_dataset("dummy/dataset", "/tmp/output")
 
@@ -19,11 +19,11 @@ def test_download_kaggle_dataset_creates_directory():
     Test that output directory is created if it does not exist.
     """
     
-    with mock.patch('pipelines.include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
+    with mock.patch('include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
          mock.patch('os.path.exists', return_value=False), \
          mock.patch('os.makedirs') as mock_makedirs, \
          mock.patch('kagglehub.dataset_download') as mock_download, \
-         mock.patch('pipelines.include.src.extract_data.logger') as mock_logger:
+         mock.patch('include.src.extract_data.logger') as mock_logger:
 
         download_kaggle_dataset("dummy/dataset", "/tmp/output")
 
@@ -42,7 +42,7 @@ def test_download_kaggle_dataset_directory_exists():
     Test that if output directory exists, makedirs is not called.
     """
     
-    with mock.patch('pipelines.include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
+    with mock.patch('include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
          mock.patch('os.path.exists', return_value=True), \
          mock.patch('os.makedirs') as mock_makedirs, \
          mock.patch('kagglehub.dataset_download') as mock_download:
@@ -58,7 +58,7 @@ def test_download_kaggle_dataset_propagates_exception():
     Test that any exception from kagglehub is propagated.
     """
     
-    with mock.patch('pipelines.include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
+    with mock.patch('include.src.extract_data.KAGGLE_API_TOKEN', 'fake-token'), \
          mock.patch('os.path.exists', return_value=True), \
          mock.patch('kagglehub.dataset_download', side_effect=Exception("Kaggle error")):
 
