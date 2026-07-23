@@ -9,7 +9,7 @@ BUCKET_NAME = os.getenv('BUCKET_NAME')
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from dags.minio.load_to_minio import get_files_path, upload_local_file, main
+from dags.raw.load_to_minio import get_files_path, upload_local_file, main
 
 class TestGetFilesPath(unittest.TestCase):
 
