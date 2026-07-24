@@ -2,13 +2,14 @@ import kagglehub
 import dotenv
 import os
 import logging
+from airflow.models import Variable
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 dotenv.load_dotenv()
-KAGGLE_API_TOKEN = os.getenv("KAGGLE_API_TOKEN")
-DATASET_PATH = os.getenv("KAGGLE_DATASET_NAME")
+KAGGLE_API_TOKEN = Variable.get("KAGGLE_API_TOKEN")
+DATASET_PATH = Variable.get("KAGGLE_DATASET_NAME")
 
 def download_kaggle_dataset(dataset:str, output_dir:str) -> None:
     """
@@ -29,12 +30,12 @@ def download_kaggle_dataset(dataset:str, output_dir:str) -> None:
     
     try:
         logger.info('Downloading dataset...')
-        kagglehub.dataset_download(dataset, force_download=True, output_dir=output_dir)
+        kagglehub.dataset_download(dataset, output_dir=output_dir)
         logger.info('Dataset downloaded successfully!')
     except Exception as e:
         logger.error('Error downloading dataset: {}'.format(e))
         raise
 
 if __name__ == "__main__":
-    download_kaggle_dataset(DATASET_PATH, output_dir="../../../data/")
+    download_kaggle_dataset(DATASET_PATH, output_dir="/opt/airflow/data")
 

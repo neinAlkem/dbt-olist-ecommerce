@@ -5,16 +5,17 @@ import logging
 from dotenv import load_dotenv
 import os
 import json
+from airflow.models import Variable
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-url = os.getenv('ZIP_URL')
+url = Variable.get('ZIP_URL')
 headers = {
-    'X-Parse-Application-Id': str(os.getenv('ZIP_HEADERS_APPLICATION')),
-    'X-Parse-Master-Key': str(os.getenv('ZIP_HEADERS_MASTER'))
+    'X-Parse-Application-Id': str(Variable.get('ZIP_HEADERS_APPLICATION')),
+    'X-Parse-Master-Key': str(Variable.get('ZIP_HEADERS_MASTER'))
 }
 batch_limit = 1000 
 
@@ -81,7 +82,7 @@ async def extract_zipcodes():
         
         df = df.drop_duplicates(subset=['postal_code']) 
         
-        df.to_csv('data/zipcodes_geo.csv', index=False)
+        df.to_csv('/opt/airflow/data/zipcodes_geo.csv', index=False)
         logger.info(f"Data successfully saved! Total unique records: {len(df)}")
 
 if __name__ == "__main__":
