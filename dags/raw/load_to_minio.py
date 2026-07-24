@@ -29,7 +29,7 @@ def get_files_path() -> list[str]:
     
     try:
         file_list = []
-        for filename in os.listdir(os.path.join(BASE_DIR, 'data')):
+        for filename in os.listdir('/opt/airflow/data'):
             if filename.endswith('.csv'):
                 file_list.append(filename)
                 continue
@@ -67,12 +67,12 @@ def upload_local_file(filelist: list[str]) -> None:
             client.fput_object(
                 BUCKET_NAME, 
                 file,
-                os.path.join(BASE_DIR, 'data', file),
+                os.path.join('/opt/airflow/data', file),
                 'text/csv'
             )    
             logger.info('Successfuly loading {} to bucket.'.format(file))
             
-            os.remove(os.path.join(BASE_DIR, 'data', file))
+            os.remove(os.path.join('/opt/airflow/data', file))
             logger.info('Successfuly removing {} from local.'.format(file))
             
     except S3Error as e:

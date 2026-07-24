@@ -30,7 +30,7 @@ def download_kaggle_dataset(dataset:str, output_dir:str) -> None:
     
     try:
         logger.info('Downloading dataset...')
-        kagglehub.dataset_download(dataset, force_download=True, output_dir=output_dir)
+        kagglehub.dataset_download(dataset, output_dir=output_dir)
         logger.info('Dataset downloaded successfully!')
     except Exception as e:
         logger.error('Error downloading dataset: {}'.format(e))
