@@ -15,6 +15,6 @@ ON
     a.product_category_name = b.product_category_name
 
 {% if is_incremental() %}
-WHERE product_key NOT IN
-     (SELECT product_key FROM {{ this }})
+WHERE TRIM(CAST(a.product_id AS STRING)) 
+    NOT IN (SELECT product_key FROM {{ this }})
 {% endif %}

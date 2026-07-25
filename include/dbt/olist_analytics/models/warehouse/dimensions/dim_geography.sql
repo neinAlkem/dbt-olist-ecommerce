@@ -31,6 +31,6 @@ LEFT JOIN {{ ref('staging_geo_cities') }} b
     ON a.geolocation_city = b.city_name
 
 {% if is_incremental() %}
-WHERE geolocation_key 
+WHERE TRIM(MD5(CAST(COALESCE(CONCAT(a.geolocation_zipcode_prefix,a.geolocation_city,a.geolocation_state),'') AS STRING)))
     NOT IN (SELECT geolocation_key FROM {{ this }})
 {% endif %}

@@ -29,12 +29,12 @@ WITH
             END AS is_weekend
         FROM
             generated_date
-    )
 
         {% if is_incremental() %}
-        WHERE full_date NOT IN 
+        WHERE generated_date.date_day NOT IN 
             (SELECT MAX(full_date) FROM {{ this }})
         {% endif %}
+    )
 
 SELECT 
     md5(cast(coalesce(cast(full_date AS STRING), '') as STRING)) AS date_key,

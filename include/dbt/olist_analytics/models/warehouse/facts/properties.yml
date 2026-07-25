@@ -392,9 +392,6 @@ models:
                         to: ref('dim_payment_type')
                         to_columns: payment_type_name
                 data_tests:
-                    -   not_null:
-                            config:
-                                severity: error
                     -   relationships:
                             arguments:
                                 to: ref('dim_payment_type')

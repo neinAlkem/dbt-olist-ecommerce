@@ -9,7 +9,7 @@ FROM
     {{ ref('order_status') }}
 
 {% if is_incremental() %}
-WHERE order_status_key 
+WHERE TRIM(MD5(CAST(COALESCE(CAST(order_status_name AS STRING), '') AS STRING)))
     NOT IN (SELECT order_status_key FROM {{ this }})
 {% endif %}
 

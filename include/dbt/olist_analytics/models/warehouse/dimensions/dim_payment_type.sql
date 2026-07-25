@@ -8,6 +8,6 @@ FROM
     {{ ref('payment_type') }}
 
 {% if is_incremental() %}
-WHERE payment_type_key 
+WHERE  MD5(CAST(COALESCE(CAST(payment_type_name AS STRING), '') AS STRING))
     NOT IN (SELECT payment_type_key FROM {{ this }})
 {% endif %}

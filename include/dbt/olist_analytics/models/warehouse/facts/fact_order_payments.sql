@@ -31,7 +31,7 @@ WITH lowest_grain AS (
             END
 
         {% if is_incremental() %}
-    WHERE incremental_hash NOT IN
+    WHERE a.incremental_hash NOT IN
          (SELECT incremental_hash FROM {{ this }} )
     {% endif %}
 )

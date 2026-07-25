@@ -9,6 +9,6 @@ FROM
     {{ ref('staging_customer') }}
 
 {% if is_incremental() %}
-        WHERE customer_key NOT IN 
-            (SELECT customer_key FROM {{ this }})
+    WHERE customer_id 
+        NOT IN (SELECT customer_key FROM {{ this }})
 {% endif %}

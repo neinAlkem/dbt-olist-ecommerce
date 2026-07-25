@@ -34,7 +34,7 @@ WITH lowest_grain AS (
         ON h.full_date = CAST(a.order_estimated_delivery_date AS DATE) 
 
     {% if is_incremental() %}
-    WHERE incremental_hash NOT IN
+    WHERE a.incremental_hash NOT IN
          (SELECT incremental_hash FROM {{ this }} )
     {% endif %}
 )
