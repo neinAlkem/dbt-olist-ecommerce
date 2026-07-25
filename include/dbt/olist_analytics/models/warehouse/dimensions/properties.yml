@@ -5,7 +5,10 @@ models:
     -   name: dim_date
         description: 'Dimension layer for custom date range'
         config:
-            materialized: table
+            materialized: incremental
+            unique_key: date_key
+            on_schema_change: fail
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0
@@ -183,7 +186,10 @@ models:
     -   name: dim_payment_type
         description: 'Dimension layer for payment type data'
         config:
-            materialized: table
+            materialized: incremental
+            unique_key: payment_type_key
+            on_schema_change: fail
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0
@@ -322,6 +328,9 @@ models:
         description: 'Dimension layer for product data'
         config:
             materialized: incremental
+            unique_key: product_key
+            on_schema_change: fail
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0
@@ -392,7 +401,10 @@ models:
     -   name: dim_order_status
         description: 'Dimension layer for order status data'
         config:
-            materialized: table
+            materialized: incremental
+            unique_key: order_status_key
+            on_schema_change: fail
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0
@@ -480,7 +492,10 @@ models:
     -   name: dim_geography
         description: 'Dimension layer for geography data'
         config:
-            materialized: table
+            materialized: incremental
+            unique_key: geolocation_key
+            on_schema_change: fail
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0

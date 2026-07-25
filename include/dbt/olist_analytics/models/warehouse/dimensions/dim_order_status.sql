@@ -4,7 +4,12 @@ SELECT
     TRIM(order_status_name) AS order_status_name,
     TRIM(status_category) AS status_category,
     TRIM(CAST(status_sequence AS CHAR(3))) AS status_sequence,
-    CURRENT_TIMESTAMP() AS load_timestamp
+    DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM
     {{ ref('order_status') }}
+
+{% if is_incremental() %}
+WHERE order_status_key 
+    NOT IN (SELECT order_status_key FROM {{ this }})
+{% endif %}
 

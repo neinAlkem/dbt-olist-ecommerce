@@ -4,10 +4,11 @@ SELECT
     customer_zip_code_prefix, 
     customer_city, 
     customer_state, 
-    CURRENT_TIMESTAMP() AS load_timestamp
+    DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM
     {{ ref('staging_customer') }}
 
 {% if is_incremental() %}
-        WHERE load_timestamp > (SELECT MAX(load_timestamp) FROM {{ this }})
+        WHERE customer_key NOT IN 
+            (SELECT customer_key FROM {{ this }})
 {% endif %}

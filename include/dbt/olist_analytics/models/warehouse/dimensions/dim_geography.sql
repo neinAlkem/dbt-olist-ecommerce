@@ -25,7 +25,12 @@ SELECT
     a.geolocation_state,
     TRIM(COALESCE(b.latitude, '0')) AS geolocation_lat,
     TRIM(COALESCE(b.longitude,'0')) AS geolocation_lng,
-    CURRENT_TIMESTAMP() AS load_timestamp
+    DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM unique_combination a
 LEFT JOIN {{ ref('staging_geo_cities') }} b
     ON a.geolocation_city = b.city_name
+
+{% if is_incremental() %}
+WHERE geolocation_key 
+    NOT IN (SELECT geolocation_key FROM {{ this }})
+{% endif %}

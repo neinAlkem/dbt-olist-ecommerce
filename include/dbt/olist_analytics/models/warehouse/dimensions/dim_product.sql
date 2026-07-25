@@ -6,7 +6,7 @@ SELECT
     COALESCE(TRIM(ROUND(CAST(a.product_length_cm AS FLOAT), 2)), 0.00) AS product_length_cm,
     COALESCE(TRIM(ROUND(CAST(a.product_height_cm AS FLOAT), 2)), 0.00) AS product_height_cm,
     COALESCE(TRIM(ROUND(CAST(a.product_width_cm AS FLOAT), 2)), 0.00) AS product_width_cm,
-    CURRENT_TIMESTAMP() AS load_timestamp
+    DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp
 FROM
     {{ ref('staging_products') }} a
 LEFT JOIN
@@ -15,6 +15,6 @@ ON
     a.product_category_name = b.product_category_name
 
 {% if is_incremental() %}
-WHERE
-    a.load_timestamp > (SELECT MAX(load_timestamp) FROM {{ this }})
+WHERE product_key NOT IN
+     (SELECT product_key FROM {{ this }})
 {% endif %}
