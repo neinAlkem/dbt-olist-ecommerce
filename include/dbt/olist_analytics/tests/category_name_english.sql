@@ -12,11 +12,5 @@ SELECT
 FROM
     {{ ref('dim_product') }}
 WHERE
-    product_category_name_english NOT IN (
-        SELECT DISTINCT product_category_name_english
-        FROM {{ ref('staging_category_name_translation') }}
-    )
-    OR    
-        product_category_name_english LIKE '%Unknown%'
-
+    product_category_name_english IS NULL
 

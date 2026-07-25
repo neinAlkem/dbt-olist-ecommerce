@@ -244,7 +244,7 @@ models:
             materialized: incremental
             unique_key: scd_id
             on_schema_change: fail
-            incremental_strategy: delete+insert
+            incremental_strategy: merge
             enforced: true
         schema: warehouse
         version: 1.0.0

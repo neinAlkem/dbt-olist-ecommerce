@@ -570,7 +570,7 @@ models:
         version: 1.0.1
         columns:
 
-            -   name: seller_id
+            -   name: seller_key
                 description: 'Seller identifier.'
                 data_tests:
                     -   not_null:
