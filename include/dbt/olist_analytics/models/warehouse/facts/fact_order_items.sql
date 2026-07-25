@@ -30,9 +30,9 @@ WITH lowest_grain AS (
         ON z.order_status = e.order_status_name
 
     {% if is_incremental() %}
-    WHERE f.load_timestamp >= ( SELECT MAX(load_timestamp) FROM {{ this }} )
+    WHERE incremental_hash NOT IN
+         (SELECT incremental_hash FROM {{ this }} )
     {% endif %}
-
 )
 
 SELECT

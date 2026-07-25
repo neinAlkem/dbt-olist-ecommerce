@@ -33,7 +33,7 @@ WITH source_data AS (
         d.seller_state,
         d.scd_id,
         d.load_timestamp,
-        CURRENT_TIMESTAMP() AS expiry_timestamp,
+        DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS expiry_timestamp,
         FALSE AS is_active
     FROM destination_data d
     JOIN new_or_changed n
@@ -47,7 +47,7 @@ WITH source_data AS (
         seller_city,
         seller_state,
         scd_id,
-        CURRENT_TIMESTAMP() AS load_timestamp,
+        DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp,
         TIMESTAMP('9999-12-31 23:59:59') AS expiry_timestamp,
         TRUE AS is_active
     FROM new_or_changed
@@ -62,7 +62,7 @@ WITH source_data AS (
         seller_city,
         seller_state,
         scd_id,
-        CURRENT_TIMESTAMP() AS load_timestamp,
+        DATE_FORMAT(CURRENT_TIMESTAMP(), 'yyyy-MM-dd HH:mm:ss') AS load_timestamp,
         TIMESTAMP('9999-12-31 23:59:59') AS expiry_timestamp,
         TRUE AS is_active
     FROM source_data

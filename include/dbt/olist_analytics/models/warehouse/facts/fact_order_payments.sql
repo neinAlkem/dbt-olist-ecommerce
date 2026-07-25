@@ -30,8 +30,9 @@ WITH lowest_grain AS (
                 ELSE NULL
             END
 
-    {% if is_incremental() %}
-    WHERE a.load_timestamp >= ( SELECT MAX(load_timestamp)  FROM {{ this }} )
+        {% if is_incremental() %}
+    WHERE incremental_hash NOT IN
+         (SELECT incremental_hash FROM {{ this }} )
     {% endif %}
 )
 
