@@ -13,29 +13,37 @@ from dags.raw.load_to_minio import get_files_path, upload_local_file, main
 
 class TestGetFilesPath(unittest.TestCase):
 
-    @patch('os.listdir')
-    @patch('dags.raw.load_to_minio.BASE_DIR') # Patch BASE_DIR itself
-    def test_get_files_path_returns_csv_files(self, mock_base_dir_path, mock_listdir):
-        # Simulate BASE_DIR being a Path object and its division operation
-        mock_data_path = MagicMock()
-        mock_data_path.__str__.return_value = '/fake/path/to/data' # What os.listdir will receive
-        mock_base_dir_path.__truediv__.return_value = mock_data_path
+    @patch("os.listdir")
+    def test_get_files_path_returns_csv_files(self, mock_listdir):
 
-        mock_listdir.return_value = ['file1.csv', 'file2.txt', 'file3.csv']
+        mock_listdir.return_value = [
+            "file1.csv",
+            "file2.txt",
+            "file3.csv",
+        ]
 
         result = get_files_path()
 
-        mock_listdir.assert_called_once_with('/fake/path/to/data')
-        self.assertEqual(result, ['file1.csv', 'file3.csv'])
+        mock_listdir.assert_called_once_with("/opt/airflow/data")
 
-    @patch('os.listdir')
-    def test_get_files_path_raises_file_not_found_error_when_no_files(self, mock_listdir):
-       
+        self.assertEqual(
+            result,
+            [
+                "file1.csv",
+                "file3.csv",
+            ],
+        )
+
+    @patch("os.listdir")
+    def test_get_files_path_raises_file_not_found_error_when_no_files(
+        self,
+        mock_listdir,
+    ):
+
         mock_listdir.side_effect = FileNotFoundError()
 
         with self.assertRaises(FileNotFoundError):
             get_files_path()
-
 
 class TestUploadLocalFile(unittest.TestCase):
 
