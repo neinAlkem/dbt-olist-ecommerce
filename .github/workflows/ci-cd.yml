@@ -111,7 +111,7 @@ jobs:
             -   name: run unit testing
                 if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
-                    docker exec airflow-worker sh -c 'pytest tests/ -v'
+                    docker compose exec -T airflow-worker sh -c 'pytest tests/ -v'
             -   name: check dbt changed files
                 id: changed-file-dbt-test
                 uses: tj-actions/changed-files@v45
@@ -121,19 +121,19 @@ jobs:
             -   name: install dbt deps
                 if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
-                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt deps --profiles-dir .'
+                     docker compose exec -Tairflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt deps --profiles-dir .'
             -   name: run dbt parse
                 if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
-                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt parse --profiles-dir .'
+                     docker compose exec -T airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt parse --profiles-dir .'
             -   name: run dbt compile
                 if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
-                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt compile --profiles-dir .'
+                     docker compose exec -T airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt compile --profiles-dir .'
             -   name: run dbt build
                 if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
-                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt build --profiles-dir .'
+                     docker compose exec -T airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt build --profiles-dir .'
             -   name: cleanup resources
                 if: always()
                 run: docker compose down -v
