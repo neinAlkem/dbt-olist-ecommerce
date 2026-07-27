@@ -96,7 +96,7 @@ jobs:
                         dags/**
             -   name: setup docker compose
                 if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-                run: docker compose up -d
+                run: docker compose up --build 
             -   name: debug containers
                 if: always()
                 run: |
