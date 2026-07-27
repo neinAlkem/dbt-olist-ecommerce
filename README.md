@@ -66,13 +66,8 @@ The primary goal of this project is to build a robust, scalable, and automated b
 - `tests/` - Pytest-based unit + integration tests
 - `docs/` - Project documentations
 
-## Getting started
+## Documentation
 
+### DWH Schema
 
-### Prerequisites
-
-
-### Setup (local development)
-
-
-### Running tests
+![Data Warehouse Schema](docs/dwh_schema.png)
