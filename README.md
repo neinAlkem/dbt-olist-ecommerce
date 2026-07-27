@@ -57,6 +57,7 @@ The primary goal of this project is to build a robust, scalable, and automated b
   - `dbt_staging.py` - Pipeline to enrich, load, and test data within staging layer in DWH
   - `dbt_warehouse.py` - Pipeline to enrich, load, and test data within warehouse layer in DWH
   - `extract_load_raw.py`- Pipeline for extracting data and load it into raw layer in DWH
+- `.github/worfklows` - CI/CD Pipeline Configuration 
 - `dags/raw/` - Extract raw data from various API Calls
 - `dags/warehouse/` - Logic for loading data from MiniIO to databricks and DWH init
 - `include/dbt/` - DBT template and confirguration
@@ -65,6 +66,7 @@ The primary goal of this project is to build a robust, scalable, and automated b
 - `Dockerfile` - Image build definition
 - `tests/` - Pytest-based unit + integration tests
 - `docs/` - Project documentations
+- `requirements.txt` - Project python deps 
 
 ## Documentation
 
