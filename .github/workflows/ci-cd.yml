@@ -47,6 +47,7 @@ jobs:
 
     unit-and-integration-test:
         runs-on: ubuntu-latest
+        needs: build-and-push-image
         env:
             AIRFLOW_CELERY_DATABASE: ${{ secrets.AIRFLOW_CELERY_DATABASE }}
             AIRFLOW_CELERY_HOST: ${{ secrets.AIRFLOW_CELERY_HOST }}
