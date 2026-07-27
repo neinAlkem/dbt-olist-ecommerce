@@ -18,7 +18,7 @@ def test_dags_integration(dagbag):
     expected_taks_count = {
         'extract_load_to_raw': 7,
         'dbt_staging': 2,
-        'data_warehouse': 1
+        'dbt_warehouse': 1
     }
     print('=============')
     for dag_id, expected_count in expected_taks_count.items():
