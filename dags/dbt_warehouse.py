@@ -28,3 +28,5 @@ with DAG(
         cwd="/opt/airflow/include/dbt/olist_analytics",
         bash_command="dbt build --select warehouse",
     )
+    
+    dbt_warehouse
