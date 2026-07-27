@@ -13,34 +13,42 @@ from dags.raw.load_to_minio import get_files_path, upload_local_file, main
 
 class TestGetFilesPath(unittest.TestCase):
 
-    @patch('os.listdir')
-    @patch('dags.warehouse.load_to_minio.BASE_DIR') # Patch BASE_DIR itself
-    def test_get_files_path_returns_csv_files(self, mock_base_dir_path, mock_listdir):
-        # Simulate BASE_DIR being a Path object and its division operation
-        mock_data_path = MagicMock()
-        mock_data_path.__str__.return_value = '/fake/path/to/data' # What os.listdir will receive
-        mock_base_dir_path.__truediv__.return_value = mock_data_path
+    @patch("os.listdir")
+    def test_get_files_path_returns_csv_files(self, mock_listdir):
 
-        mock_listdir.return_value = ['file1.csv', 'file2.txt', 'file3.csv']
+        mock_listdir.return_value = [
+            "file1.csv",
+            "file2.txt",
+            "file3.csv",
+        ]
 
         result = get_files_path()
 
-        mock_listdir.assert_called_once_with('/fake/path/to/data')
-        self.assertEqual(result, ['file1.csv', 'file3.csv'])
+        mock_listdir.assert_called_once_with("/opt/airflow/data")
 
-    @patch('os.listdir')
-    def test_get_files_path_raises_file_not_found_error_when_no_files(self, mock_listdir):
-       
+        self.assertEqual(
+            result,
+            [
+                "file1.csv",
+                "file3.csv",
+            ],
+        )
+
+    @patch("os.listdir")
+    def test_get_files_path_raises_file_not_found_error_when_no_files(
+        self,
+        mock_listdir,
+    ):
+
         mock_listdir.side_effect = FileNotFoundError()
 
         with self.assertRaises(FileNotFoundError):
             get_files_path()
 
-
 class TestUploadLocalFile(unittest.TestCase):
 
-    @patch('dags.warehouse.load_to_minio.Minio')
-    @patch('dags.warehouse.load_to_minio.logger')
+    @patch('dags.raw.load_to_minio.Minio')
+    @patch('dags.raw.load_to_minio.logger')
     @patch('os.remove') # Mock os.remove
     def test_upload_local_file_creates_bucket_and_uploads_files(self, mock_remove, mock_logger, mock_minio):
 
@@ -63,8 +71,8 @@ class TestUploadLocalFile(unittest.TestCase):
         mock_remove.call_count == 2 # Verify os.remove was called for each file
 
 
-    @patch('dags.warehouse.load_to_minio.Minio')
-    @patch('dags.warehouse.load_to_minio.logger')
+    @patch('dags.raw.load_to_minio.Minio')
+    @patch('dags.raw.load_to_minio.logger')
     @patch('os.remove') # Mock os.remove
     def test_upload_local_file_does_not_create_bucket_if_exists(self, mock_remove, mock_logger, mock_minio):
 
@@ -84,8 +92,8 @@ class TestUploadLocalFile(unittest.TestCase):
 
 class TestMain(unittest.TestCase):
 
-    @patch('dags.warehouse.load_to_minio.get_files_path')
-    @patch('dags.warehouse.load_to_minio.upload_local_file')
+    @patch('dags.raw.load_to_minio.get_files_path')
+    @patch('dags.raw.load_to_minio.upload_local_file')
     def test_main_calls_get_files_path_and_upload_local_file(self, mock_upload, mock_get_files):
        
         mock_get_files.return_value = ['file1.csv', 'file2.csv']

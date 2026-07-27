@@ -6,13 +6,13 @@ from airflow.models import Variable
 from airflow.operators.python import PythonOperator
 from airflow.operators.trigger_dagrun import TriggerDagRunOperator
 
-from raw.extract_data import download_kaggle_dataset
-from raw.extract_geo_city import extract_cities
-from raw.extract_geo_zipcodes import extract_zipcodes
-from raw.load_to_minio import main as load_to_minio
+from dags.raw.extract_data import download_kaggle_dataset
+from dags.raw.extract_geo_city import extract_cities
+from dags.raw.extract_geo_zipcodes import extract_zipcodes
+from dags.raw.load_to_minio import main as load_to_minio
 
-from warehouse.schema_init import init_warehouse_schema
-from warehouse.load_to_raw import load_source_to_raw
+from dags.warehouse.schema_init import init_warehouse_schema
+from dags.warehouse.load_to_raw import load_source_to_raw
 
 
 local_timezone = pendulum.timezone("Asia/Jakarta")

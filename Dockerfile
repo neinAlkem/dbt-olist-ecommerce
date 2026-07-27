@@ -9,4 +9,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
     && rm -rf /var/lib/apt/lists/*
 
 USER airflow
-RUN uv pip install --no-cache-dir dbt-core dbt-databricks boto3 kagglehub minio databricks-connect
+COPY requirements.txt .
+RUN uv pip install --no-cache-dir -r requirements.txt

@@ -35,8 +35,8 @@ def get_files_path() -> list[str]:
                 continue
             else:
                 continue
-    except:
-        raise FileNotFoundError()
+    except FileNotFoundError:
+        raise 
 
     return file_list
         
@@ -58,7 +58,7 @@ def upload_local_file(filelist: list[str]) -> None:
     
     try:
         if not client.bucket_exists(BUCKET_NAME):
-            logger.warn('Bucket {} not exists, creating...'.format(BUCKET_NAME))
+            logger.warning('Bucket {} not exists, creating...'.format(BUCKET_NAME))
             client.make_bucket(BUCKET_NAME)
             logger.info('Bucket {} created.'.format(BUCKET_NAME))
             

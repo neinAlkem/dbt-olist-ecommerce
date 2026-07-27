@@ -1,0 +1,14 @@
+aiohttp
+anyio
+boto3
+cryptography
+databricks-connect
+dbt-core
+dbt-databricks
+dbt-duckdb
+dotenv
+kagglehub
+minio
+pytest
+pytest-asyncio
+unidecode
