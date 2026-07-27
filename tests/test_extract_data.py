@@ -30,7 +30,7 @@ def test_download_kaggle_dataset_creates_directory():
         # Check that makedirs was called with the output_dir
         mock_makedirs.assert_called_once_with("/tmp/output")
         # Check that dataset_download was called with correct args
-        mock_download.assert_called_once_with("dummy/dataset", force_download=True, output_dir="/tmp/output")
+        mock_download.assert_called_once_with("dummy/dataset", output_dir="/tmp/output")
         # Check logging calls (optional)
         mock_logger.info.assert_any_call('Check for output directory avaibility')
         mock_logger.info.assert_any_call('Directory available!')
@@ -51,7 +51,7 @@ def test_download_kaggle_dataset_directory_exists():
 
         # makedirs should not be called
         mock_makedirs.assert_not_called()
-        mock_download.assert_called_once_with("dummy/dataset", force_download=True, output_dir="/tmp/output")
+        mock_download.assert_called_once_with("dummy/dataset", output_dir="/tmp/output")
 
 def test_download_kaggle_dataset_propagates_exception():
     """
