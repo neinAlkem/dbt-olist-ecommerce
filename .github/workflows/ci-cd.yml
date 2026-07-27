@@ -96,19 +96,12 @@ jobs:
                         dags/**
             -   name: setup docker compose
                 if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
-                run: docker compose up --build 
+                run: docker compose up -d
             -   name: debug containers
                 if: always()
                 run: |
                     docker ps -a
-                    docker compose logs airflow-worker || docker logs $(docker ps -a -q -f name=airflow-worker)
-                    docker compose logs airflow-scheduler || docker logs $(docker ps -a -q -f name=airflow-scheduler )
-            -   name: Wait for Airflow
-                run: |
-                    until docker exec airflow-worker airflow version; do
-                        echo "Waiting for Airflow..."
-                        sleep 5
-                    done
+                    docker compose logs 
             -   name: run unit testing
                 if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
                 run: |
