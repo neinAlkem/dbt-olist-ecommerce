@@ -99,8 +99,8 @@ jobs:
                 if: always()
                 run: |
                     docker ps -a
-                    docker compose logs airflow-worker
-                    docker compose logs airflow-scheduler
+                    docker-compose logs airflow-worker || docker logs $(docker ps -a -q -f name=airflow-worker)
+                    docker compose logs airflow-scheduler || docker logs $(docker ps -a -q -f name=airflow-scheduler )
             -   name: Wait for Airflow
                 run: |
                     until docker exec airflow-worker airflow version; do
