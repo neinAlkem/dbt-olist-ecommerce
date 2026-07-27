@@ -49,6 +49,8 @@ jobs:
         runs-on: ubuntu-latest
         needs: build-and-push-image
         env:
+            AIRFLOW__API_AUTH__JWT_SECRET: ${{ secrets.AIRFLOW__API_AUTH__JWT_SECRET }}
+            AIRFLOW__API_AUTH__JWT_ISSUER: ${{ secrets.AIRFLOW__API_AUTH__JWT_ISSUER }}
             AIRFLOW_CELERY_DATABASE: ${{ secrets.AIRFLOW_CELERY_DATABASE }}
             AIRFLOW_CELERY_HOST: ${{ secrets.AIRFLOW_CELERY_HOST }}
             AIRFLOW_CELERY_PASSWORD: ${{ secrets.AIRFLOW_CELERY_PASSWORD }}
