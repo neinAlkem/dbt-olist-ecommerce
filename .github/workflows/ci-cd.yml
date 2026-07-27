@@ -44,4 +44,102 @@ jobs:
                 if: steps.changed-file-build.outputs.any_changed == 'false'
                 run: |
                     echo 'No changes found in Dockerfile, requirements.txt, or pyproject.toml. Skipping build.'
+
+    unit-and-integration-test:
+        runs-on: ubuntu-latest
+        env:
+            AIRFLOW_CELERY_DATABASE: ${{ secrets.AIRFLOW_CELERY_DATABASE }}
+            AIRFLOW_CELERY_HOST: ${{ secrets.AIRFLOW_CELERY_HOST }}
+            AIRFLOW_CELERY_PASSWORD: ${{ secrets.AIRFLOW_CELERY_PASSWORD }}
+            AIRFLOW_CELERY_USERNAME: ${{ secrets.AIRFLOW_CELERY_USERNAME }}
+            AIRFLOW_FERNET_KEY: ${{ secrets.AIRFLOW_FERNET_KEY }}
+            AIRFLOW_METADATA_DATABASE: ${{ secrets.AIRFLOW_METADATA_DATABASE }}
+            AIRFLOW_METADATA_HOST: ${{ secrets.AIRFLOW_METADATA_HOST }}
+            AIRFLOW_METADATA_PASSWORD: ${{ secrets.AIRFLOW_METADATA_PASSWORD }}
+            AIRFLOW_METADATA_USERNAME: ${{ secrets.AIRFLOW_METADATA_USERNAME }}
+            AIRFLOW_UID: ${{ secrets.AIRFLOW_UID }}
+            AIRFLOW_WWW_USER_PASSWORD: ${{ secrets.IRFLOW_WWW_USER_PASSWORD }}
+            AIRFLOW_WWW_USER_USERNAME: ${{ secrets.AIRFLOW_WWW_USER_USERNAME }}
+            BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
+            CITY_HEADERS_APPLICATION: ${{ secrets.CITY_HEADERS_APPLICATION }}
+            CITY_HEADERS_MASTER: ${{ secrets.CITY_HEADERS_MASTER }}
+            CITY_URL: ${{ secrets.CITY_URL }}
+            DATABRICKS_CATALOG: ${{ secrets.DATABRICKS_CATALOG }}
+            DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+            DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+            DOCKERHUB_NAMESPACE: ${{ vars.DOCKERHUB_NAMESPACE }}
+            DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+            DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+            DOCKERHUB_REPOSITORY: ${{ vars.DOCKERHUB_REPOSITORY }}
+            KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+            KAGGLE_DATASET_NAME: ${{ secrets.KAGGLE_DATASET_NAME }}
+            MINIO_HOST: ${{ secrets.MINIO_HOST }}
+            MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
+            MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
+            MINIO_ENDPOINT: ${{ secrets.MINIO_ENDPOINT }}
+            PIP_ADDITIONAL_REQUIREMENTS: ${{ secrets.PIP_ADDITIONAL_REQUIREMENTS }}
+            ZIP_HEADERS_APPLICATION: ${{ secrets.ZIP_HEADERS_APPLICATION }}
+            ZIP_HEADERS_MASTER: ${{ secrets.ZIP_HEADERS_MASTER }}
+            ZIP_URL: ${{ secrets.ZIP_URL }}
+        steps:
+            -   name: checkout code
+                uses: actions/checkout@v3
+            -   name: get changed files
+                id: changed-file-test
+                uses: tj-actions/changed-files@v45
+                with:
+                    files: |
+                        docker-compose.yaml
+                        dags/**
+            -   name: setup docker compose
+                if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: docker compose up -d
+            -   name: debug containers
+                if: always()
+                run: |
+                    docker ps -a
+                    docker compose logs airflow-worker
+                    docker compose logs airflow-scheduler
+            -   name: Wait for Airflow
+                run: |
+                    until docker exec airflow-worker airflow version; do
+                        echo "Waiting for Airflow..."
+                        sleep 5
+                    done
+            -   name: run unit testing
+                if: steps.changed-file-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: |
+                    docker exec airflow-worker sh -c 'pytest tests/ -v'
+            -   name: check dbt changed files
+                id: changed-file-dbt-test
+                uses: tj-actions/changed-files@v45
+                with: 
+                    files: |
+                        include/dbt/**
+            -   name: install dbt deps
+                if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: |
+                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt deps --profiles-dir .'
+            -   name: run dbt parse
+                if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: |
+                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt parse --profiles-dir .'
+            -   name: run dbt compile
+                if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: |
+                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt compile --profiles-dir .'
+            -   name: run dbt build
+                if: steps.changed-file-dbt-test.outputs.any_changed == 'true' || github.event_name == 'workflow_dispatch'
+                run: |
+                    docker exec airflow-worker sh -c 'cd /opt/airflow/include/dbt/olist_analytics && dbt build --profiles-dir .'
+            -   name: cleanup resources
+                if: always()
+                run: docker compose down -v
+                    
+  
+
+
+                
+            
+
          
